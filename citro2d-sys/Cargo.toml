@@ -1,0 +1,19 @@
+[package]
+name = "citro2d-sys"
+version = "0.1.0"
+authors = ["Rust3DS Org", "panicbit <panicbit.dev@gmail.com>"]
+edition = "2021"
+license = "Zlib"
+links = "citro2d"
+
+[dependencies]
+libc = "0.2.116"
+ctru-sys = { git = "https://github.com/rust3ds/ctru-rs.git" }
+
+[build-dependencies]
+bindgen = { version = "0.68.1", features = ["experimental"] }
+cc = "1.0.83"
+doxygen-rs = "0.4.2"
+
+[dev-dependencies]
+shim-3ds = { git = "https://github.com/rust3ds/shim-3ds.git" }
