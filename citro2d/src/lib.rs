@@ -46,7 +46,7 @@ impl Instance {
     #[doc(alias = "C2D_Init")]
     pub fn with_max_objects(max_objects: usize) -> Result<Self> {
         //TODO add this here but the docs read like it may need to be called again if it switches between 2d and 3d?
-        // citro2d_sys::C2D_Prepare();
+        citro2d_sys::C2D_Prepare();
         if unsafe { citro2d_sys::C2D_Init(max_objects) } {
             Ok(Self {})
         } else {
