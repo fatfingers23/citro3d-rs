@@ -9,6 +9,10 @@ ctru-rs = { git = "https://github.com/rust3ds/ctru-rs.git" }
 ctru-sys = { git = "https://github.com/rust3ds/ctru-rs.git" }
 citro2d-sys = { path = "../citro2d-sys" }
 citro3d = { path = "../citro3d" }
+#TODO ideally these will be able to be removed
+# Here for testing/development for now
+citro3d-sys = { path = "../citro3d-sys" }
+rgb = "0.8.50"
 
 [dev-dependencies]
 test-runner = { git = "https://github.com/rust3ds/ctru-rs.git" }

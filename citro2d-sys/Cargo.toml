@@ -9,6 +9,7 @@ links = "citro2d"
 [dependencies]
 libc = "0.2.116"
 ctru-sys = { git = "https://github.com/rust3ds/ctru-rs.git" }
+citro3d-sys = { path = "../citro3d-sys" }
 
 [build-dependencies]
 bindgen = { version = "0.68.1", features = ["experimental"] }

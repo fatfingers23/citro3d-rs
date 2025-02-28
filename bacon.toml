@@ -3,18 +3,26 @@
 command = ["cargo", "3ds", "check"]
 need_stdout = true
 allow_warnings = true
-watch = ["*"]
+
+[jobs.3ds-check-examples]
+command = ["cargo", "3ds", "check", "--examples"]
+need_stdout = true
+allow_warnings = true
+watch = ["examples"]
+
 
 [jobs.bacon-ls]
 command = [
     "cargo",
     "3ds",
     "check",
+    # "--examples",
     "--message-format",
     "json-diagnostic-rendered-ansi",
 ]
 analyzer = "cargo_json"
 need_stdout = true
+watch = ["examples"]
 
 [exports.cargo-json-spans]
 auto = true
