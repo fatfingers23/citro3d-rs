@@ -1,10 +1,10 @@
 use std::cell::RefMut;
 
 use ctru::services::gfx::Screen;
-use ctru_sys::GFX_LEFT;
 
 use crate::{Error, Result};
 
+#[derive(Debug, Clone, Copy)]
 pub struct Color {
     // inner_rgb: Rgba<u8>,
     pub inner: u32,
@@ -48,5 +48,11 @@ impl<'screen> Target<'screen> {
             raw,
             _phantom_screen: screen,
         })
+    }
+
+    pub fn clear(&mut self, color: Color) {
+        unsafe {
+            citro2d_sys::C2D_TargetClear(self.raw, color.inner);
+        }
     }
 }

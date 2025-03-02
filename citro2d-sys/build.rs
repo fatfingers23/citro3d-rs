@@ -46,7 +46,7 @@ fn main() {
     let include_path = PathBuf::from_iter([devkitpro.as_str(), "libctru", "include"]);
     // let tex3ds_h = include_path.join("tex3ds.h");
     let citro2d_h = include_path.join("citro2d.h");
-    let citro3d_h = include_path.join("citro3d.h");
+    // let citro3d_h = include_path.join("citro3d.h");
     let three_ds_h = include_path.join("3ds.h");
 
     let sysroot = Path::new(devkitarm.as_str()).join("arm-none-eabi");

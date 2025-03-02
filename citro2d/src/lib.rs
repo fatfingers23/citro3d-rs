@@ -21,6 +21,7 @@ pub mod render;
 
 use citro2d_sys::C2D_DEFAULT_MAX_OBJECTS;
 pub use error::{Error, Result};
+use render::Target;
 
 /// The single instance for using `citro2d`. This is the base type that an application
 /// should instantiate to use this library.
@@ -70,15 +71,15 @@ impl Instance {
         }
     }
 
-    pub fn render_frame_with<F>(&mut self, target: &citro3d::render::Target<'_>, f: F)
+    pub fn render_target<F>(&mut self, target: &mut Target<'_>, f: F)
     where
-        F: FnOnce(&Self),
+        F: FnOnce(&Self, &mut Target<'_>),
     {
-        // unsafe { citro2d_sys::C2D_SceneBegin(target.raw as ) }
-        // self.citro3d_instance.render_frame_with(|instance| unsafe {
-        //     // citro2d_sys::C2D_SceneBegin(target.raw);
-        //     f(self);
-        //     citro3d_sys::C3D_FrameEnd(0);
-        // });
+        unsafe {
+            citro3d_sys::C3D_FrameBegin(citro3d_sys::C3D_FRAME_SYNCDRAW);
+            citro2d_sys::C2D_SceneBegin(target.raw);
+            f(self, target);
+            citro3d_sys::C3D_FrameEnd(0);
+        }
     }
 }
