@@ -20,33 +20,50 @@ fn main() {
     let mut top_target = Target::new(top_left).expect("failed to create render target");
     let mut bottom_target =
         Target::new(gfx.bottom_screen.borrow_mut()).expect("failed to create render target");
-    let red: Color = Color::new(255, 0, 0);
-
+    let colors = [
+        Color::new(255, 0, 0),   // Red
+        Color::new(255, 127, 0), // Orange
+        Color::new(255, 255, 0), // Yellow
+        Color::new(0, 255, 0),   // Green
+        Color::new(0, 0, 255),   // Blue
+        Color::new(75, 0, 130),  // Indigo
+        Color::new(148, 0, 211), // Violet
+    ];
+    let mut top_color_index = 0;
+    let mut bottom_color_index = 0;
+    let mut pick_new_color_counter = 0;
+    let mut pick_new_color = false;
     while apt.main_loop() {
+        pick_new_color_counter += 1;
+
         hid.scan_input();
+
+        citro2d_instance.render_target(&mut top_target, |_instance, render_target| unsafe {
+            if pick_new_color {
+                render_target.clear(colors[top_color_index]);
+                top_color_index = (top_color_index + 1) % colors.len();
+            }
+        });
+
+        citro2d_instance.render_target(&mut bottom_target, |_instance, render_target| unsafe {
+            if pick_new_color {
+                render_target.clear(colors[bottom_color_index]);
+                bottom_color_index = (bottom_color_index + 1) % colors.len();
+            }
+        });
+
+        if pick_new_color {
+            pick_new_color = false;
+        }
 
         if hid.keys_down().contains(KeyPad::START) {
             break;
         }
 
-        citro2d_instance.render_target(&mut top_target, |_instance, render_target| unsafe {
-            render_target.clear(red);
-            // citro2d_sys::C2D_TargetClear(top_target.raw, red.inner);
-        });
-
-        citro2d_instance.render_target(&mut bottom_target, |_instance, render_target| unsafe {
-            render_target.clear(red);
-            // citro2d_sys::C2D_TargetClear(bottom_target.raw, red.inner);
-        });
-
-        // unsafe {
-        //     citro3d_sys::C3D_FrameBegin(citro3d_sys::C3D_FRAME_SYNCDRAW);
-        //     citro2d_sys::C2D_SceneBegin(top_target.raw);
-
-        //     citro2d_sys::C2D_TargetClear(top_target.raw, red.inner);
-
-        //     citro3d_sys::C3D_FrameEnd(0);
-        // }
+        if pick_new_color_counter % 10 == 0 {
+            pick_new_color_counter = 0;
+            pick_new_color = true;
+        }
 
         gfx.wait_for_vblank();
     }
