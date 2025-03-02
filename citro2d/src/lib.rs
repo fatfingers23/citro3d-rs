@@ -18,7 +18,7 @@
 
 pub mod error;
 pub mod render;
-
+pub mod shapes;
 use citro2d_sys::C2D_DEFAULT_MAX_OBJECTS;
 pub use error::{Error, Result};
 use render::Target;
@@ -41,8 +41,7 @@ impl Instance {
             C2D_DEFAULT_MAX_OBJECTS.try_into().unwrap(),
             citro3d_instance,
         );
-        //TODO add this here but the docs read like it may need to be called again if it switches between 2d and 3d?
-        // unsafe { citro2d_sys::C2D_Prepare() };
+
         citro2d
     }
 
@@ -62,13 +61,15 @@ impl Instance {
         max_objects: usize,
         citro3d_instance: citro3d::Instance,
     ) -> Result<Self> {
-        if unsafe { citro2d_sys::C2D_Init(max_objects) } {
-            Ok(Self {
+        let new_citro_2d = match unsafe { citro2d_sys::C2D_Init(max_objects) } {
+            true => Ok(Self {
                 citro3d_instance: citro3d_instance,
-            })
-        } else {
-            Err(Error::FailedToInitialize)
-        }
+            }),
+            false => Err(Error::FailedToInitialize),
+        };
+        unsafe { citro2d_sys::C2D_Prepare() };
+        //TODO add this here but the docs read like it may need to be called again if it switches between 2d and 3d?
+        new_citro_2d
     }
 
     pub fn render_target<F>(&mut self, target: &mut Target<'_>, f: F)
@@ -82,4 +83,25 @@ impl Instance {
             citro3d_sys::C3D_FrameEnd(0);
         }
     }
+
+    /// Returns some stats about the 3Ds's graphics
+    pub fn get_3d_stats(&self) -> Citro3DStats {
+        //TODO should i check for NaN? Seems like that's like null?
+        let processing_time_f32 = unsafe { citro3d_sys::C3D_GetProcessingTime() };
+        let drawing_time_f32 = unsafe { citro3d_sys::C3D_GetDrawingTime() };
+        //Seems more info for this from C3D_Context?
+        let cmd_buf_usage_f32 = unsafe { citro3d_sys::C3D_GetCmdBufUsage() };
+        Citro3DStats {
+            processing_time: processing_time_f32,
+            drawing_time: drawing_time_f32,
+            cmd_buf_usage: cmd_buf_usage_f32,
+        }
+    }
+}
+
+/// Stats about the 3Ds's graphics
+pub struct Citro3DStats {
+    pub processing_time: f32,
+    pub drawing_time: f32,
+    pub cmd_buf_usage: f32,
 }

@@ -2,7 +2,7 @@ use std::cell::RefMut;
 
 use ctru::services::gfx::Screen;
 
-use crate::{Error, Result};
+use crate::{Error, Result, shapes::Shape};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Color {
@@ -18,6 +18,18 @@ impl Color {
     pub fn new_with_alpha(r: u8, g: u8, b: u8, a: u8) -> Self {
         let inner = r as u32 | (g as u32) << 8 | (b as u32) << 16 | (a as u32) << 24;
         Self { inner }
+    }
+}
+
+impl Into<Color> for u32 {
+    fn into(self) -> Color {
+        Color { inner: self }
+    }
+}
+
+impl From<Color> for u32 {
+    fn from(color: Color) -> u32 {
+        color.inner
     }
 }
 
@@ -54,5 +66,12 @@ impl<'screen> Target<'screen> {
         unsafe {
             citro2d_sys::C2D_TargetClear(self.raw, color.inner);
         }
+    }
+
+    pub fn render_2d_shape<S>(&self, shape: &S)
+    where
+        S: Shape,
+    {
+        shape.render();
     }
 }
