@@ -59,12 +59,12 @@ impl Shape for RectangleSolid {
 }
 
 pub struct Triangle {
-    pub point0: Point,
-    pub color0: Color,
-    pub point1: Point,
-    pub color1: Color,
-    pub point2: Point,
-    pub color2: Color,
+    pub top: Point,
+    pub top_color: Color,
+    pub left: Point,
+    pub left_color: Color,
+    pub right: Point,
+    pub right_color: Color,
     pub depth: f32,
 }
 
@@ -73,15 +73,15 @@ impl Shape for Triangle {
     fn render(&self) -> bool {
         unsafe {
             citro2d_sys::C2D_DrawTriangle(
-                self.point0.x,
-                self.point0.y,
-                self.color0.into(),
-                self.point1.x,
-                self.point1.y,
-                self.color1.into(),
-                self.point2.x,
-                self.point2.y,
-                self.color2.into(),
+                self.top.x,
+                self.top.y,
+                self.top_color.into(),
+                self.left.x,
+                self.left.y,
+                self.left_color.into(),
+                self.right.x,
+                self.right.y,
+                self.right_color.into(),
                 self.depth,
             )
         }

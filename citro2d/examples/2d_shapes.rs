@@ -46,12 +46,12 @@ fn main() {
             render_target.clear(clr_clear);
 
             render_target.render_2d_shape(&Triangle {
-                point0: (25.0, 190.0).into(),
-                color0: clr_white,
-                point1: (0.0, SCREEN_HEIGHT as f32).into(),
-                color1: clr_tri1,
-                point2: (50.0, SCREEN_HEIGHT as f32).into(),
-                color2: clr_tri2,
+                top: (25.0, 190.0).into(),
+                top_color: clr_white,
+                left: (0.0, SCREEN_HEIGHT as f32).into(),
+                left_color: clr_tri1,
+                right: (50.0, SCREEN_HEIGHT as f32).into(),
+                right_color: clr_tri2,
                 depth: 0.0,
             });
 
