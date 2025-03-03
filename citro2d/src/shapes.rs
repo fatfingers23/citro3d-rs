@@ -1,57 +1,57 @@
-use crate::render::Color;
+use crate::{Point, Size, render::Color};
+
+pub struct MultiColor {
+    pub top_left: Color,
+    pub top_right: Color,
+    pub bottom_left: Color,
+    pub bottom_right: Color,
+}
 
 pub trait Shape {
     fn render(&self) -> bool;
 }
 
 pub struct Rectangle {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
-    pub width: f32,
-    pub height: f32,
-    pub color_top_left: Color,
-    pub color_top_right: Color,
-    pub color_bottom_left: Color,
-    pub color_bottom_right: Color,
+    pub point: Point,
+    pub size: Size,
+    pub multi_color: MultiColor,
 }
 
 impl Shape for Rectangle {
+    #[doc(alias = "C2D_DrawRectangle")]
     fn render(&self) -> bool {
         unsafe {
             citro2d_sys::C2D_DrawRectangle(
-                self.x,
-                self.y,
-                self.z,
-                self.width,
-                self.height,
-                self.color_top_left.into(),
-                self.color_top_right.into(),
-                self.color_bottom_left.into(),
-                self.color_bottom_right.into(),
+                self.point.x,
+                self.point.y,
+                self.point.z,
+                self.size.width,
+                self.size.height,
+                self.multi_color.top_left.into(),
+                self.multi_color.top_right.into(),
+                self.multi_color.bottom_left.into(),
+                self.multi_color.bottom_right.into(),
             )
         }
     }
 }
 
 pub struct RectangleSolid {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
-    pub width: f32,
-    pub height: f32,
+    pub point: Point,
+    pub size: Size,
     pub color: Color,
 }
 
 impl Shape for RectangleSolid {
+    #[doc(alias = "C2D_DrawRectSolid")]
     fn render(&self) -> bool {
         unsafe {
             citro2d_sys::C2D_DrawRectSolid(
-                self.x,
-                self.y,
-                self.z,
-                self.width,
-                self.height,
+                self.point.x,
+                self.point.y,
+                self.point.z,
+                self.size.width,
+                self.size.height,
                 self.color.into(),
             )
         }
@@ -59,30 +59,28 @@ impl Shape for RectangleSolid {
 }
 
 pub struct Triangle {
-    pub x0: f32,
-    pub y0: f32,
+    pub point0: Point,
     pub color0: Color,
-    pub x1: f32,
-    pub y1: f32,
+    pub point1: Point,
     pub color1: Color,
-    pub x2: f32,
-    pub y2: f32,
+    pub point2: Point,
     pub color2: Color,
     pub depth: f32,
 }
 
 impl Shape for Triangle {
+    #[doc(alias = "C2D_DrawTriangle")]
     fn render(&self) -> bool {
         unsafe {
             citro2d_sys::C2D_DrawTriangle(
-                self.x0,
-                self.y0,
+                self.point0.x,
+                self.point0.y,
                 self.color0.into(),
-                self.x1,
-                self.y1,
+                self.point1.x,
+                self.point1.y,
                 self.color1.into(),
-                self.x2,
-                self.y2,
+                self.point2.x,
+                self.point2.y,
                 self.color2.into(),
                 self.depth,
             )

@@ -105,3 +105,50 @@ pub struct Citro3DStats {
     pub drawing_time: f32,
     pub cmd_buf_usage: f32,
 }
+
+/// A 2D point in space.
+pub struct Point {
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
+}
+
+impl Point {
+    pub const fn new(x: f32, y: f32, z: f32) -> Self {
+        Self { x, y, z }
+    }
+
+    pub const fn new_no_z(x: f32, y: f32) -> Self {
+        Self { x, y, z: 0.0 }
+    }
+}
+
+impl From<(f32, f32, f32)> for Point {
+    fn from((x, y, z): (f32, f32, f32)) -> Self {
+        Self { x, y, z }
+    }
+}
+
+impl From<(f32, f32)> for Point {
+    fn from((x, y): (f32, f32)) -> Self {
+        Self { x, y, z: 0.0 }
+    }
+}
+
+/// Size of a 2D object.
+pub struct Size {
+    pub width: f32,
+    pub height: f32,
+}
+
+impl Size {
+    pub const fn new(width: f32, height: f32) -> Self {
+        Self { width, height }
+    }
+}
+
+impl From<(f32, f32)> for Size {
+    fn from((width, height): (f32, f32)) -> Self {
+        Self { width, height }
+    }
+}

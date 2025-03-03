@@ -4,8 +4,9 @@
 //! https://github.com/devkitPro/3ds-examples/blob/master/graphics/gpu/2d_shapes/source/main.c
 #![feature(allocator_api)]
 
+use citro2d::Point;
 use citro2d::render::{Color, Target};
-use citro2d::shapes::{Circle, CircleSolid, Ellipse, Rectangle, Triangle};
+use citro2d::shapes::{Circle, CircleSolid, Ellipse, MultiColor, Rectangle, Triangle};
 use ctru::{prelude::*, services::gfx::TopScreen3D};
 
 const SCREEN_WIDTH: u16 = 400;
@@ -45,28 +46,24 @@ fn main() {
             render_target.clear(clr_clear);
 
             render_target.render_2d_shape(&Triangle {
-                x0: 25.0,
-                y0: 190.0,
+                point0: (25.0, 190.0).into(),
                 color0: clr_white,
-                x1: 0.0,
-                y1: SCREEN_HEIGHT as f32,
+                point1: (0.0, SCREEN_HEIGHT as f32).into(),
                 color1: clr_tri1,
-                x2: 50.0,
-                y2: SCREEN_HEIGHT as f32,
+                point2: (50.0, SCREEN_HEIGHT as f32).into(),
                 color2: clr_tri2,
                 depth: 0.0,
             });
 
             render_target.render_2d_shape(&Rectangle {
-                x: 350.0,
-                y: 0.0,
-                z: 0.0,
-                width: 50.0,
-                height: 50.0,
-                color_top_left: clr_rec1,
-                color_top_right: clr_rec2,
-                color_bottom_left: clr_rec3,
-                color_bottom_right: clr_rec4,
+                point: Point::new(350.0, 0.0, 0.0),
+                size: (50.0, 50.0).into(),
+                multi_color: MultiColor {
+                    top_left: clr_rec1,
+                    top_right: clr_rec2,
+                    bottom_left: clr_rec3,
+                    bottom_right: clr_rec4,
+                },
             });
 
             // Circles require a state change (an expensive operation) within citro2d's internals, so draw them last.
