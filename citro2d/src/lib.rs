@@ -19,6 +19,7 @@
 pub mod error;
 pub mod render;
 pub mod shapes;
+pub mod text;
 use citro2d_sys::C2D_DEFAULT_MAX_OBJECTS;
 pub use error::{Error, Result};
 use render::Target;
@@ -107,6 +108,7 @@ pub struct Citro3DStats {
 }
 
 /// A 2D point in space.
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Point {
     pub x: f32,
     pub y: f32,
@@ -136,6 +138,7 @@ impl From<(f32, f32)> for Point {
 }
 
 /// Size of a 2D object.
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Size {
     pub width: f32,
     pub height: f32,

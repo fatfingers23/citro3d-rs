@@ -16,7 +16,7 @@ command = [
     "cargo",
     "3ds",
     "check",
-    # "--examples",
+    "--examples",
     "--message-format",
     "json-diagnostic-rendered-ansi",
 ]
