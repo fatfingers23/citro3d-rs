@@ -1,5 +1,7 @@
 use crate::{Point, Size, render::Color};
 
+//TODFO i think line is the only shape left even tho its not much of a shape doesnt fit eslewhere
+
 pub struct MultiColor {
     pub top_left: Color,
     pub top_right: Color,
@@ -113,6 +115,28 @@ impl Shape for Ellipse {
     }
 }
 
+pub struct EllipseSolid {
+    pub point: Point,
+    pub size: Size,
+    pub color: Color,
+}
+
+impl Shape for EllipseSolid {
+    #[doc(alias = "C2D_DrawEllipseSolid")]
+    fn render(&self) -> bool {
+        unsafe {
+            citro2d_sys::C2D_DrawEllipseSolid(
+                self.point.x,
+                self.point.y,
+                self.point.z,
+                self.size.width,
+                self.size.height,
+                self.color.into(),
+            )
+        }
+    }
+}
+
 pub struct Circle {
     pub point: Point,
     pub radius: f32,
@@ -150,6 +174,33 @@ impl Shape for CircleSolid {
     fn render(&self) -> bool {
         unsafe {
             citro2d_sys::C2D_DrawCircleSolid(self.x, self.y, self.z, self.radius, self.color.into())
+        }
+    }
+}
+
+pub struct Line {
+    pub start: Point,
+    pub end: Point,
+    pub start_color: Color,
+    pub end_color: Color,
+    pub thickness: f32,
+    pub depth: f32,
+}
+
+impl Shape for Line {
+    #[doc(alias = "C2D_DrawLine")]
+    fn render(&self) -> bool {
+        unsafe {
+            citro2d_sys::C2D_DrawLine(
+                self.start.x,
+                self.start.y,
+                self.start_color.into(),
+                self.end.x,
+                self.end.y,
+                self.end_color.into(),
+                self.thickness,
+                self.depth,
+            )
         }
     }
 }
