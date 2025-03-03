@@ -89,58 +89,49 @@ impl Shape for Triangle {
 }
 
 pub struct Ellipse {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
-    pub width: f32,
-    pub height: f32,
-    pub top_left_color: Color,
-    pub top_right_color: Color,
-    pub bottom_left_color: Color,
-    pub bottom_right_color: Color,
+    pub point: Point,
+    pub size: Size,
+    pub multi_color: MultiColor,
 }
 
 impl Shape for Ellipse {
+    #[doc(alias = "C2D_DrawEllipse")]
     fn render(&self) -> bool {
         unsafe {
             citro2d_sys::C2D_DrawEllipse(
-                self.x,
-                self.y,
-                self.z,
-                self.width,
-                self.height,
-                self.top_left_color.into(),
-                self.top_right_color.into(),
-                self.bottom_left_color.into(),
-                self.bottom_right_color.into(),
+                self.point.x,
+                self.point.y,
+                self.point.z,
+                self.size.width,
+                self.size.height,
+                self.multi_color.top_left.into(),
+                self.multi_color.top_right.into(),
+                self.multi_color.bottom_left.into(),
+                self.multi_color.bottom_right.into(),
             )
         }
     }
 }
 
 pub struct Circle {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
+    pub point: Point,
     pub radius: f32,
-    pub top_left_color: Color,
-    pub top_right_color: Color,
-    pub bottom_left_color: Color,
-    pub bottom_right_color: Color,
+    pub multi_color: MultiColor,
 }
 
 impl Shape for Circle {
+    #[doc(alias = "C2D_DrawCircle")]
     fn render(&self) -> bool {
         unsafe {
             citro2d_sys::C2D_DrawCircle(
-                self.x,
-                self.y,
-                self.z,
+                self.point.x,
+                self.point.y,
+                self.point.z,
                 self.radius,
-                self.top_left_color.into(),
-                self.top_right_color.into(),
-                self.bottom_left_color.into(),
-                self.bottom_right_color.into(),
+                self.multi_color.top_left.into(),
+                self.multi_color.top_right.into(),
+                self.multi_color.bottom_left.into(),
+                self.multi_color.bottom_right.into(),
             )
         }
     }
@@ -155,6 +146,7 @@ pub struct CircleSolid {
 }
 
 impl Shape for CircleSolid {
+    #[doc(alias = "C2D_DrawCircleSolid")]
     fn render(&self) -> bool {
         unsafe {
             citro2d_sys::C2D_DrawCircleSolid(self.x, self.y, self.z, self.radius, self.color.into())

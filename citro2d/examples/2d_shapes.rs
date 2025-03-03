@@ -23,21 +23,21 @@ fn main() {
     let mut top_target = Target::new(top_left).expect("failed to create render target");
 
     let bottom_screen = Console::new(gfx.bottom_screen.borrow_mut());
-    let clr_white = Color::new_with_alpha(0xFF, 0xFF, 0xFF, 0xFF);
-    let clr_green = Color::new_with_alpha(0x00, 0xFF, 0x00, 0xFF);
-    let clr_red = Color::new_with_alpha(0xFF, 0x00, 0x00, 0xFF);
-    let clr_blue = Color::new_with_alpha(0x00, 0x00, 0xFF, 0xFF);
-    let clr_circle1 = Color::new_with_alpha(0xFF, 0x00, 0xFF, 0xFF);
-    let clr_circle2 = Color::new_with_alpha(0xFF, 0xFF, 0x00, 0xFF);
-    let clr_circle3 = Color::new_with_alpha(0x00, 0xFF, 0xFF, 0xFF);
-    let clr_solid_circle = Color::new_with_alpha(0x68, 0xB0, 0xD8, 0xFF);
-    let clr_tri1 = Color::new_with_alpha(0xFF, 0x15, 0x00, 0xFF);
-    let clr_tri2 = Color::new_with_alpha(0x27, 0x69, 0xE5, 0xFF);
-    let clr_rec1 = Color::new_with_alpha(0x9A, 0x6C, 0xB9, 0xFF);
-    let clr_rec2 = Color::new_with_alpha(0xFF, 0xFF, 0x2C, 0xFF);
-    let clr_rec3 = Color::new_with_alpha(0xD8, 0xF6, 0x0F, 0xFF);
-    let clr_rec4 = Color::new_with_alpha(0x40, 0xEA, 0x87, 0xFF);
-    let clr_clear = Color::new_with_alpha(0xFF, 0xD8, 0xB0, 0x68);
+    let clr_white = Color::new(255, 255, 255);
+    let clr_green = Color::new(0, 255, 0);
+    let clr_red = Color::new(255, 0, 0);
+    let clr_blue = Color::new(0, 0, 255);
+    let clr_circle1 = Color::new(255, 0, 255);
+    let clr_circle2 = Color::new(255, 255, 0);
+    let clr_circle3 = Color::new(0, 255, 255);
+    let clr_solid_circle = Color::new(104, 176, 216);
+    let clr_tri1 = Color::new(255, 21, 0);
+    let clr_tri2 = Color::new(39, 105, 229);
+    let clr_rec1 = Color::new(154, 108, 185);
+    let clr_rec2 = Color::new(255, 255, 44);
+    let clr_rec3 = Color::new(216, 246, 15);
+    let clr_rec4 = Color::new(64, 234, 135);
+    let clr_clear = Color::new_with_alpha(255, 216, 176, 104);
 
     while apt.main_loop() {
         hid.scan_input();
@@ -72,37 +72,36 @@ fn main() {
             // be drawn before all non-circular objects, or afterwards.
 
             render_target.render_2d_shape(&Ellipse {
-                x: 0.0,
-                y: 0.0,
-                z: 0.0,
-                width: SCREEN_WIDTH as f32,
-                height: SCREEN_HEIGHT as f32,
-                top_left_color: clr_circle1,
-                top_right_color: clr_circle2,
-                bottom_left_color: clr_circle3,
-                bottom_right_color: clr_white,
+                point: Point::new(0.0, 0.0, 0.0),
+                size: (SCREEN_WIDTH as f32, SCREEN_HEIGHT as f32).into(),
+                multi_color: MultiColor {
+                    top_left: clr_circle1,
+                    top_right: clr_circle2,
+                    bottom_left: clr_circle3,
+                    bottom_right: clr_white,
+                },
             });
 
             render_target.render_2d_shape(&Circle {
-                x: (SCREEN_WIDTH / 2) as f32,
-                y: (SCREEN_HEIGHT / 2) as f32,
-                z: 0.0,
+                point: Point::new((SCREEN_WIDTH / 2) as f32, (SCREEN_HEIGHT / 2) as f32, 0.0),
                 radius: 50.0,
-                top_left_color: clr_circle3,
-                top_right_color: clr_white,
-                bottom_left_color: clr_circle1,
-                bottom_right_color: clr_circle2,
+                multi_color: MultiColor {
+                    top_left: clr_circle3,
+                    top_right: clr_white,
+                    bottom_left: clr_circle1,
+                    bottom_right: clr_circle2,
+                },
             });
 
             render_target.render_2d_shape(&Circle {
-                x: 25.0,
-                y: 25.0,
-                z: 0.0,
+                point: Point::new(25.0, 25.0, 0.0),
                 radius: 25.0,
-                top_left_color: clr_red,
-                top_right_color: clr_blue,
-                bottom_left_color: clr_green,
-                bottom_right_color: clr_white,
+                multi_color: MultiColor {
+                    top_left: clr_red,
+                    top_right: clr_blue,
+                    bottom_left: clr_green,
+                    bottom_right: clr_white,
+                },
             });
 
             render_target.render_2d_shape(&CircleSolid {
