@@ -43,13 +43,33 @@ fn main() {
     let mut ball = Ball {
         position: Point::new(
             BOTTOM_SCREEN_WIDTH as f32 / 2.0,
-            BOTTOM_SCREEN_HEIGHT as f32 / 2.0,
+            (BOTTOM_SCREEN_HEIGHT - 15) as f32,
             0.0,
         ),
         radius: 5.0,
         color: white,
         velocity: Point::new(2.0, -2.0, 0.0),
     };
+    let collors_of_rainbow = [
+        Color::new(255, 0, 0),
+        Color::new(255, 127, 0),
+        Color::new(255, 255, 0),
+        Color::new(0, 255, 0),
+        Color::new(0, 0, 255),
+        Color::new(75, 0, 130),
+        Color::new(148, 0, 211),
+    ];
+    let mut bricks = Vec::new();
+    for row in 0..7 {
+        for column in 0..12 {
+            bricks.push(Brick {
+                position: Point::new(column as f32 * 32.0, row as f32 * 16.0, 0.0),
+                size: (30.0, 15.0).into(),
+                color: collors_of_rainbow[row],
+                is_alive: true,
+            });
+        }
+    }
 
     while apt.main_loop() {
         hid.scan_input();
@@ -67,14 +87,25 @@ fn main() {
 
         citro2d_instance.render_target(&mut top_target, |_instance, render_target| {
             render_target.clear(black);
+
+            paddle.render(render_target);
+
+            ball.bounce(&paddle);
+            for brick in &mut bricks {
+                // brick.render(render_target);'
+                if brick.is_alive {
+                    brick.live_or_die(&mut ball);
+                    brick.render(render_target);
+                }
+            }
+            //circles are better to render last for performance reasons
+            ball.render(render_target);
         });
 
         citro2d_instance.render_target(&mut bottom_target, |_instance, render_target| {
             render_target.clear(black);
-            ball.bounce(&paddle);
-            paddle.render(render_target);
-            //circles are better to render last for performance reasons
-            ball.render(render_target);
+
+            // }
         });
 
         //Uncomment to cap fps
@@ -99,13 +130,13 @@ impl Paddle {
 
     fn move_left(&mut self) {
         if self.position.x > 0.0 {
-            self.position.x -= 1.75;
+            self.position.x -= 2.0;
         }
     }
 
     fn move_right(&mut self) {
         if self.position.x <= BOTTOM_SCREEN_WIDTH as f32 - self.size.width {
-            self.position.x += 1.75;
+            self.position.x += 2.0;
         }
     }
 }
@@ -134,7 +165,7 @@ impl Ball {
 
         // Check for collision with the walls
         if self.position.x - self.radius <= 0.0
-            || self.position.x + self.radius >= BOTTOM_SCREEN_WIDTH as f32
+            || self.position.x + self.radius >= TOP_SCREEN_WIDTH as f32
         {
             self.velocity.x = -self.velocity.x;
         }
@@ -152,14 +183,74 @@ impl Ball {
         }
 
         // Check if the ball hits the bottom of the screen
-        if self.position.y + self.radius >= BOTTOM_SCREEN_HEIGHT as f32 {
+        if self.position.y + self.radius >= TOP_SCREEN_WIDTH as f32 {
             // Reset ball position or handle game over
             self.position = Point::new(
-                BOTTOM_SCREEN_WIDTH as f32 / 2.0,
-                BOTTOM_SCREEN_HEIGHT as f32 / 2.0,
+                TOP_SCREEN_WIDTH as f32 / 2.0,
+                TOP_SCREEN_HEIGHT as f32 / 2.0,
                 0.0,
             );
             self.velocity = Point::new(2.0, -2.0, 0.0);
+        }
+    }
+}
+
+struct Brick {
+    pub position: Point,
+    pub size: Size,
+    pub color: Color,
+    pub is_alive: bool,
+}
+
+impl Brick {
+    fn render(&self, render_target: &mut Target) {
+        if self.is_alive {
+            render_target.render_2d_shape(&RectangleSolid {
+                point: self.position,
+                size: self.size,
+                color: self.color,
+            });
+        }
+    }
+
+    fn check_collision(&self, ball: &mut Ball) -> bool {
+        let brick_left = self.position.x;
+        let brick_right = self.position.x + self.size.width;
+        let brick_top = self.position.y;
+        let brick_bottom = self.position.y + self.size.height;
+
+        let ball_left = ball.position.x - ball.radius;
+        let ball_right = ball.position.x + ball.radius;
+        let ball_top = ball.position.y - ball.radius;
+        let ball_bottom = ball.position.y + ball.radius;
+
+        if ball_left < brick_right
+            && ball_right > brick_left
+            && ball_top < brick_bottom
+            && ball_bottom > brick_top
+        {
+            // Determine the side of the collision and bounce the ball accordingly
+            if ball.velocity.x > 0.0 && ball_left < brick_right && ball_right > brick_left {
+                ball.velocity.x = -ball.velocity.x;
+            } else if ball.velocity.x < 0.0 && ball_right > brick_left && ball_left < brick_right {
+                ball.velocity.x = -ball.velocity.x;
+            }
+
+            if ball.velocity.y > 0.0 && ball_top < brick_bottom && ball_bottom > brick_top {
+                ball.velocity.y = -ball.velocity.y;
+            } else if ball.velocity.y < 0.0 && ball_bottom > brick_top && ball_top < brick_bottom {
+                ball.velocity.y = -ball.velocity.y;
+            }
+
+            return true;
+        }
+
+        false
+    }
+
+    fn live_or_die(&mut self, ball: &mut Ball) {
+        if self.check_collision(ball) {
+            self.is_alive = false;
         }
     }
 }
