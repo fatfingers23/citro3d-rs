@@ -2,9 +2,7 @@
 #![feature(allocator_api)]
 
 use citro2d::render::{Color, Target};
-use citro2d::shapes::{
-    Circle, CircleSolid, Ellipse, MultiColor, Rectangle, RectangleSolid, Triangle,
-};
+use citro2d::shapes::{CircleSolid, RectangleSolid};
 use citro2d::{Point, Size};
 use ctru::{prelude::*, services::gfx::TopScreen3D};
 
@@ -24,8 +22,7 @@ fn main() {
     let (top_left, _) = top_screen.split_mut();
     let mut top_target = Target::new(top_left).expect("failed to create render target");
 
-    let mut bottom_target =
-        Target::new(gfx.bottom_screen.borrow_mut()).expect("failed to create render target");
+    let bottom_screen = Console::new(gfx.bottom_screen.borrow_mut());
 
     let white = Color::new(255, 255, 255);
     let black = Color::new(0, 0, 0);
@@ -102,11 +99,12 @@ fn main() {
             ball.render(render_target);
         });
 
-        citro2d_instance.render_target(&mut bottom_target, |_instance, render_target| {
-            render_target.clear(black);
-
-            // }
-        });
+        let stats = citro2d_instance.get_3d_stats();
+        bottom_screen.select();
+        println!("\x1b[1;1HSimple Rusty citro2d shapes example");
+        println!("\x1b[2;1HCPU: {:6.2}%", stats.processing_time * 6.0);
+        println!("\x1b[3;1HGPU: {:6.2}%", stats.drawing_time * 6.0);
+        println!("\x1b[4;1HCmdBuf: {:6.2}%", stats.cmd_buf_usage * 100.0);
 
         //Uncomment to cap fps
         // gfx.wait_for_vblank();
@@ -135,7 +133,7 @@ impl Paddle {
     }
 
     fn move_right(&mut self) {
-        if self.position.x <= BOTTOM_SCREEN_WIDTH as f32 - self.size.width {
+        if self.position.x <= BOTTOM_SCREEN_WIDTH as f32 {
             self.position.x += 2.0;
         }
     }
