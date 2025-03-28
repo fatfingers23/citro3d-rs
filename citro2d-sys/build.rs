@@ -44,9 +44,7 @@ fn main() {
     );
 
     let include_path = PathBuf::from_iter([devkitpro.as_str(), "libctru", "include"]);
-    // let tex3ds_h = include_path.join("tex3ds.h");
     let citro2d_h = include_path.join("citro2d.h");
-    // let citro3d_h = include_path.join("citro3d.h");
     let three_ds_h = include_path.join("3ds.h");
 
     let sysroot = Path::new(devkitarm.as_str()).join("arm-none-eabi");
@@ -68,8 +66,6 @@ fn main() {
     let bindings = Builder::default()
         .header(three_ds_h.to_str().unwrap())
         .header(citro2d_h.to_str().unwrap())
-        // .header(citro3d_h.to_str().unwrap())
-        // .header(tex3ds_h.to_str().unwrap())
         .rust_target(RustTarget::Nightly)
         .use_core()
         .trust_clang_mangling(false)
@@ -85,8 +81,6 @@ fn main() {
         .opaque_type("(GPU|GFX)_.*")
         .opaque_type("float24Uniform_s")
         .allowlist_file(".*/c2d/.*[.]h")
-        // .allowlist_file(".*/c3d/.*[.]h")
-        // .allowlist_file(".*/tex3ds[.]h")
         .blocklist_file(".*/3ds/.*[.]h")
         .blocklist_file(".*/sys/.*[.]h")
         .wrap_static_fns(true)

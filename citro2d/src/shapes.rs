@@ -1,7 +1,5 @@
 use crate::{Point, Size, render::Color};
 
-//TODFO i think line is the only shape left even tho its not much of a shape doesnt fit eslewhere
-
 pub struct MultiColor {
     pub top_left: Color,
     pub top_right: Color,

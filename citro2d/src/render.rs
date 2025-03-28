@@ -45,6 +45,8 @@ pub struct Target<'screen> {
 }
 
 impl<'screen> Target<'screen> {
+    //TODO this comment is a lie
+
     /// Create a new render target with the given parameters. This takes a
     /// [`RenderQueue`] parameter to make sure this  [`Target`] doesn't outlive
     /// the render queue.

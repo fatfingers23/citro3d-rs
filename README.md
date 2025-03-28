@@ -3,7 +3,7 @@
 ⚠️ WIP ⚠️
 
 Rust bindings and safe wrapper to the [citro3d](https://github.com/devkitPro/citro3d)
-library, to write homebrew graphical programs for the Nintendo 3DS.
+and [citro2d](https://github.com/devkitPro/citro2d) library, to write homebrew graphical programs for the Nintendo 3DS.
 
 ## Crates
 

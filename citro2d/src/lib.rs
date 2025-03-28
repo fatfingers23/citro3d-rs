@@ -2,7 +2,7 @@
 #![test_runner(test_runner::run_gdb)]
 #![feature(doc_cfg)]
 #![feature(doc_auto_cfg)]
-#![doc(html_root_url = "https://rust3ds.github.io/citro3d-rs/crates")]
+#![doc(html_root_url = "https://rust3ds.github.io/citro2d-rs/crates")]
 #![doc(
     html_favicon_url = "https://user-images.githubusercontent.com/11131775/225929072-2fa1741c-93ae-4b47-9bdf-af70f3d59910.png"
 )]
@@ -36,7 +36,6 @@ impl Instance {
     /// Create a new instance of `citro2d`.
     /// This also initializes `citro3d` since it is required for `citro2d`.
     pub fn new() -> Result<Self> {
-        //TODO prob need to save this instance somewhere in struct. Appears it's used in the 3d implementation
         let citro3d_instance = citro3d::Instance::new().expect("failed to initialize Citro3D");
         let citro2d = Self::with_max_objects(
             C2D_DEFAULT_MAX_OBJECTS.try_into().unwrap(),
@@ -50,6 +49,7 @@ impl Instance {
     /// Have initialized citro3d already, so you can use this function to initialize
     /// You pass in the citro3d instance you already initialized to ensure it's lifetime is the same as citro2d
     /// **Note** The above statement may not work, and may not be able to switch between the two without api changes
+    /// but currently working on that assumption and to allow for flexibility for the developer
     pub fn new_without_c3d_init(citro3d_instance: citro3d::Instance) -> Result<Self> {
         Self::with_max_objects(
             C2D_DEFAULT_MAX_OBJECTS.try_into().unwrap(),
@@ -57,7 +57,9 @@ impl Instance {
         )
     }
 
+    /// Create a new instance of `citro2d` with a custom maximum number of objects.
     #[doc(alias = "C2D_Init")]
+    #[doc(alias = "C2D_Prepare")]
     pub fn with_max_objects(
         max_objects: usize,
         citro3d_instance: citro3d::Instance,
@@ -69,10 +71,13 @@ impl Instance {
             false => Err(Error::FailedToInitialize),
         };
         unsafe { citro2d_sys::C2D_Prepare() };
-        //TODO add this here but the docs read like it may need to be called again if it switches between 2d and 3d?
         new_citro_2d
     }
 
+    /// Render 2d graphics to a selected [Target]
+    #[doc(alias = "C3D_FrameBegin")]
+    #[doc(alias = "C2D_SceneBegin")]
+    #[doc(alias = "C3D_FrameEnd")]
     pub fn render_target<F>(&mut self, target: &mut Target<'_>, f: F)
     where
         F: FnOnce(&Self, &mut Target<'_>),
@@ -86,11 +91,11 @@ impl Instance {
     }
 
     /// Returns some stats about the 3Ds's graphics
+    /// TODO this may be more appropriate in citro3d
     pub fn get_3d_stats(&self) -> Citro3DStats {
-        //TODO should i check for NaN? Seems like that's like null?
+        //TODO should i check for NaN?
         let processing_time_f32 = unsafe { citro3d_sys::C3D_GetProcessingTime() };
         let drawing_time_f32 = unsafe { citro3d_sys::C3D_GetDrawingTime() };
-        //Seems more info for this from C3D_Context?
         let cmd_buf_usage_f32 = unsafe { citro3d_sys::C3D_GetCmdBufUsage() };
         Citro3DStats {
             processing_time: processing_time_f32,

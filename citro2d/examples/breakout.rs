@@ -1,4 +1,5 @@
 //! This example demonstrates a simple 2d game of the classic game Breakout
+//! Very simple implementation with bugs, but to show case a simple 2d game
 #![feature(allocator_api)]
 
 use citro2d::render::{Color, Target};
@@ -182,7 +183,7 @@ impl Ball {
 
         // Check if the ball hits the bottom of the screen
         if self.position.y + self.radius >= TOP_SCREEN_WIDTH as f32 {
-            // Reset ball position or handle game over
+            // Reset the ball
             self.position = Point::new(
                 TOP_SCREEN_WIDTH as f32 / 2.0,
                 TOP_SCREEN_HEIGHT as f32 / 2.0,
