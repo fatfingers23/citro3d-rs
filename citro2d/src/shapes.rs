@@ -1,5 +1,8 @@
+//! Safe bindings to shapes supported by citro2d
 use crate::{Point, Size, render::Color};
 
+/// Holds information for rendering multi colored shapes
+/// most shapes have a 'solid'
 pub struct MultiColor {
     pub top_left: Color,
     pub top_right: Color,
@@ -7,10 +10,13 @@ pub struct MultiColor {
     pub bottom_right: Color,
 }
 
+/// A trait to help render all 2D shapes supported by citro2d
 pub trait Shape {
+    //TODO possibly return Option<self>.
     fn render(&self) -> bool;
 }
 
+/// Holds information for rendering a C2D_DrawRectangle
 pub struct Rectangle {
     pub point: Point,
     pub size: Size,
@@ -18,6 +24,7 @@ pub struct Rectangle {
 }
 
 impl Shape for Rectangle {
+    /// Draws a multi color rectangle
     #[doc(alias = "C2D_DrawRectangle")]
     fn render(&self) -> bool {
         unsafe {
@@ -36,6 +43,7 @@ impl Shape for Rectangle {
     }
 }
 
+/// Holds the information needed to draw a solid color Rectangle
 pub struct RectangleSolid {
     pub point: Point,
     pub size: Size,
@@ -43,6 +51,7 @@ pub struct RectangleSolid {
 }
 
 impl Shape for RectangleSolid {
+    /// Draws a single colored Rectangle
     #[doc(alias = "C2D_DrawRectSolid")]
     fn render(&self) -> bool {
         unsafe {
@@ -58,6 +67,7 @@ impl Shape for RectangleSolid {
     }
 }
 
+/// Holds the information needed to draw a solid color Triangle
 pub struct Triangle {
     pub top: Point,
     pub top_color: Color,
@@ -69,6 +79,7 @@ pub struct Triangle {
 }
 
 impl Shape for Triangle {
+    /// Draws a multi color Triangle
     #[doc(alias = "C2D_DrawTriangle")]
     fn render(&self) -> bool {
         unsafe {
@@ -88,6 +99,7 @@ impl Shape for Triangle {
     }
 }
 
+/// Holds the information needed to draw a Ellipse
 pub struct Ellipse {
     pub point: Point,
     pub size: Size,
@@ -95,6 +107,7 @@ pub struct Ellipse {
 }
 
 impl Shape for Ellipse {
+    /// Draws a multi color Ellipse
     #[doc(alias = "C2D_DrawEllipse")]
     fn render(&self) -> bool {
         unsafe {
@@ -113,6 +126,7 @@ impl Shape for Ellipse {
     }
 }
 
+/// Holds the information needed to draw a solid color Triangle
 pub struct EllipseSolid {
     pub point: Point,
     pub size: Size,
@@ -120,6 +134,7 @@ pub struct EllipseSolid {
 }
 
 impl Shape for EllipseSolid {
+    ///Draws a solid color Ellipse
     #[doc(alias = "C2D_DrawEllipseSolid")]
     fn render(&self) -> bool {
         unsafe {
@@ -134,7 +149,7 @@ impl Shape for EllipseSolid {
         }
     }
 }
-
+/// Holds the information needed to draw a multi colored circle
 pub struct Circle {
     pub point: Point,
     pub radius: f32,
@@ -142,6 +157,7 @@ pub struct Circle {
 }
 
 impl Shape for Circle {
+    /// Draws a multi color Ellipse
     #[doc(alias = "C2D_DrawCircle")]
     fn render(&self) -> bool {
         unsafe {
@@ -159,6 +175,7 @@ impl Shape for Circle {
     }
 }
 
+/// Holds the information needed to draw a solid color Circle
 pub struct CircleSolid {
     pub x: f32,
     pub y: f32,
@@ -168,6 +185,7 @@ pub struct CircleSolid {
 }
 
 impl Shape for CircleSolid {
+    /// Renders a solid Circle
     #[doc(alias = "C2D_DrawCircleSolid")]
     fn render(&self) -> bool {
         unsafe {
@@ -176,6 +194,7 @@ impl Shape for CircleSolid {
     }
 }
 
+/// Holds the information needed to draw a solid color Circle
 pub struct Line {
     pub start: Point,
     pub end: Point,
@@ -186,6 +205,7 @@ pub struct Line {
 }
 
 impl Shape for Line {
+    /// Renders a line
     #[doc(alias = "C2D_DrawLine")]
     fn render(&self) -> bool {
         unsafe {
