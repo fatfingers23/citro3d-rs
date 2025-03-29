@@ -1,7 +1,7 @@
 [package]
 name = "citro2d-sys"
 version = "0.1.0"
-authors = ["Rust3DS Org", "panicbit <panicbit.dev@gmail.com>"]
+authors = ["Rust3DS Org", "Bailey Townsend"]
 edition = "2021"
 license = "Zlib"
 links = "citro2d"

@@ -13,12 +13,7 @@ and [citro2d](https://github.com/devkitPro/citro2d) library, to write homebrew g
   ([docs](https://rust3ds.github.io/citro3d-rs/crates/citro3d))
 * [`citro3d-macros`](./citro3d-macros/) – helper proc-macros for `citro3d`
 
-## Developer setup
-- Talk about Bacon and bacon ls
-- Talk about how you can use lime3ds, or panda3ds
-- Talk about how you should at a config.toml
-
 ## License
 
-* `citro3d-sys` is licensed under Zlib
+* `citro3d-sys` and `citro2d-sys` is licensed under Zlib
 * `citro3d` and `citro3d-macros` are dual-licensed under MIT or Apache-2.0
