@@ -90,7 +90,6 @@ fn main() {
 
             ball.bounce(&paddle);
             for brick in &mut bricks {
-                // brick.render(render_target);'
                 if brick.is_alive {
                     brick.live_or_die(&mut ball);
                     brick.render(render_target);

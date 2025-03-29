@@ -10,9 +10,6 @@ ctru-sys = { git = "https://github.com/rust3ds/ctru-rs.git" }
 citro2d-sys = { path = "../citro2d-sys" }
 citro3d = { version = "0.1.0", path = "../citro3d" }
 citro3d-sys = { version = "0.1.0", path = "../citro3d-sys" }
-#TODO ideally these will be able to be removed
-# Here for testing/development for now
-rgb = "0.8.50"
 
 [dev-dependencies]
 test-runner = { git = "https://github.com/rust3ds/ctru-rs.git" }
